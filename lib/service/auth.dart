@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fireball/models/user.dart';
+import 'package:fireball/service/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -33,6 +34,8 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? userss = result.user;
+      await DatabaseService(uid: userss!.uid)
+          .updateUserData('0', 'new cus', 100);
       return _userFromFireBase(userss);
     } catch (e) {
       print(e.toString());
@@ -43,7 +46,8 @@ class AuthService {
   //sign in by email and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       return _userFromFireBase(user);
     } catch (e) {
